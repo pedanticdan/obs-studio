@@ -199,11 +199,11 @@ static void build_flv_meta_data(obs_output_t *context, uint8_t **output, size_t 
 	struct dstr encoder_name = {0};
 	struct dstr videocodecid = {0};
 	struct dstr audiocodecid = {0};
-    obs_service_t *service = obs_get_service_by_name("default_service");
-    obs_data_t *settings = obs_service_get_settings(service);
-    bool use_atem = obs_data_get_bool(settings,"use_atem");
+	obs_service_t *service = obs_get_service_by_name("default_service");
+	obs_data_t *settings = obs_service_get_settings(service);
+	bool use_atem = obs_data_get_bool(settings,"use_atem");
 
-    obs_data_release(settings);
+	obs_data_release(settings);
 
 	enc_str(&enc, end, "@setDataFrame");
 	enc_str(&enc, end, "onMetaData");
@@ -217,23 +217,23 @@ static void build_flv_meta_data(obs_output_t *context, uint8_t **output, size_t 
 	enc_num_val(&enc, end, "width", (double)obs_encoder_get_width(vencoder));
 	enc_num_val(&enc, end, "height", (double)obs_encoder_get_height(vencoder));
 
-    if (use_atem) {
-        dstr_copy(&videocodecid, "avc1");
-        enc_str_val(&enc, end, "videocodecid", videocodecid.array);
-        dstr_free(&videocodecid);
-    } else {
-        enc_num_val(&enc, end, "videocodecid", encoder_video_codec(vencoder));
-    }
+	if (use_atem) {
+		dstr_copy(&videocodecid, "avc1");
+		enc_str_val(&enc, end, "videocodecid", videocodecid.array);
+		dstr_free(&videocodecid);
+	} else {
+		enc_num_val(&enc, end, "videocodecid", encoder_video_codec(vencoder));
+	}
 	enc_num_val(&enc, end, "videodatarate", encoder_bitrate(vencoder));
 	enc_num_val(&enc, end, "framerate", video_output_get_frame_rate(video));
 
-    if (use_atem) {
-        dstr_copy(&audiocodecid, "mp4a");
-        enc_str_val(&enc, end, "audiocodecid", audiocodecid.array);
-        dstr_free(&audiocodecid);
-    } else {
-        enc_num_val(&enc, end, "audiocodecid", AUDIODATA_AAC);
-    }
+	if (use_atem) {
+		dstr_copy(&audiocodecid, "mp4a");
+		enc_str_val(&enc, end, "audiocodecid", audiocodecid.array);
+		dstr_free(&audiocodecid);
+	} else {
+		enc_num_val(&enc, end, "audiocodecid", AUDIODATA_AAC);
+	}
 	enc_num_val(&enc, end, "audiodatarate", encoder_bitrate(aencoder));
 	enc_num_val(&enc, end, "audiosamplerate", (double)obs_encoder_get_sample_rate(aencoder));
 	enc_num_val(&enc, end, "audiosamplesize", 16.0);
@@ -247,14 +247,14 @@ static void build_flv_meta_data(obs_output_t *context, uint8_t **output, size_t 
 	enc_bool_val(&enc, end, "5.1", audio_output_get_channels(audio) == 6);
 	enc_bool_val(&enc, end, "7.1", audio_output_get_channels(audio) == 8);
 
-    if (use_atem) {
-        dstr_copy(&encoder_name, "Blackmagic Design AVC Encoder");
-    } else {
-        dstr_printf(&encoder_name, "%s (libobs version ", MODULE_NAME);
-        dstr_cat(&encoder_name, obs_get_version_string());
-        dstr_cat(&encoder_name, ")");
-    }
-    enc_str_val(&enc, end, "encoder", encoder_name.array);
+	if (use_atem) {
+		dstr_copy(&encoder_name, "Blackmagic Design AVC Encoder");
+	} else {
+		dstr_printf(&encoder_name, "%s (libobs version ", MODULE_NAME);
+		dstr_cat(&encoder_name, obs_get_version_string());
+		dstr_cat(&encoder_name, ")");
+	}
+	enc_str_val(&enc, end, "encoder", encoder_name.array);
 	dstr_free(&encoder_name);
 
 	*enc++ = 0;

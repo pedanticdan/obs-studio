@@ -28,7 +28,7 @@ static void rtmp_custom_update(void *data, obs_data_t *settings)
 	service->use_auth = obs_data_get_bool(settings, "use_auth");
 	service->username = bstrdup(obs_data_get_string(settings, "username"));
 	service->password = bstrdup(obs_data_get_string(settings, "password"));
-    service->use_atem = obs_data_get_bool(settings, "use_atem");
+	service->use_atem = obs_data_get_bool(settings, "use_atem");
 }
 
 static void rtmp_custom_destroy(void *data)
@@ -75,7 +75,7 @@ static obs_properties_t *rtmp_custom_properties(void *unused)
 	p = obs_properties_add_bool(ppts, "use_auth", obs_module_text("UseAuth"));
 	obs_properties_add_text(ppts, "username", obs_module_text("Username"), OBS_TEXT_DEFAULT);
 	obs_properties_add_text(ppts, "password", obs_module_text("Password"), OBS_TEXT_PASSWORD);
-    p = obs_properties_add_bool(ppts, "use_atem", obs_module_text("UseATEM"));
+	p = obs_properties_add_bool(ppts, "use_atem", obs_module_text("UseATEM"));
 	obs_property_set_modified_callback(p, use_auth_modified);
 	return ppts;
 }
