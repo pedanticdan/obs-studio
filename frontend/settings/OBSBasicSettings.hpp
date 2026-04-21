@@ -241,6 +241,7 @@ private slots:
 	void on_disconnectAccount_clicked();
 	void on_useStreamKey_clicked();
 	void on_useAuth_toggled();
+    void on_useATEM_toggled();
 	void on_server_currentIndexChanged(int index);
 
 	void on_hotkeyFilterReset_clicked();
