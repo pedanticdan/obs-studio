@@ -123,11 +123,13 @@ void OBSBasicSettings::LoadStream1Settings()
 		lastCustomServer = ui->customServer->text();
 
 		bool use_auth = obs_data_get_bool(settings, "use_auth");
+        bool use_atem = obs_data_get_bool(settings, "use_atem");
 		const char *username = obs_data_get_string(settings, "username");
 		const char *password = obs_data_get_string(settings, "password");
 		ui->authUsername->setText(QT_UTF8(username));
 		ui->authPw->setText(QT_UTF8(password));
 		ui->useAuth->setChecked(use_auth);
+        ui->useATEM->setChecked(use_atem);
 	} else {
 		int idx = ui->service->findText(service);
 		if (idx == -1) {
@@ -291,6 +293,7 @@ void OBSBasicSettings::SaveStream1Settings()
 			obs_data_set_string(settings, "username", QT_TO_UTF8(ui->authUsername->text()));
 			obs_data_set_string(settings, "password", QT_TO_UTF8(ui->authPw->text()));
 		}
+        obs_data_set_bool(settings, "use_atem", ui->useATEM->isChecked());
 	}
 
 	if (!!auth && strcmp(auth->service(), "Twitch") == 0) {
@@ -643,6 +646,7 @@ void OBSBasicSettings::ServiceChanged(bool resetFields)
 	ui->authUsername->setVisible(custom);
 	ui->authPwLabel->setVisible(custom);
 	ui->authPwWidget->setVisible(custom);
+    ui->useATEM->setVisible(custom);
 
 	if (custom || whip) {
 		ui->destinationLayout->insertRow(1, ui->serverLabel, ui->serverStackedWidget);
@@ -651,6 +655,7 @@ void OBSBasicSettings::ServiceChanged(bool resetFields)
 		ui->serverStackedWidget->setVisible(true);
 		ui->serverLabel->setVisible(true);
 		on_useAuth_toggled();
+		on_useATEM_toggled();
 	} else {
 		ui->serverStackedWidget->setCurrentIndex(0);
 	}
@@ -935,6 +940,12 @@ void OBSBasicSettings::on_useAuth_toggled()
 	ui->authUsername->setVisible(use_auth);
 	ui->authPwLabel->setVisible(use_auth);
 	ui->authPwWidget->setVisible(use_auth);
+}
+
+void OBSBasicSettings::on_useATEM_toggled()
+{
+    if (!IsCustomService())
+        return;
 }
 
 bool OBSBasicSettings::IsCustomServer()
